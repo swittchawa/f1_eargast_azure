@@ -9,6 +9,11 @@ v_data_source = dbutils.widgets.get("p_data_source")
 
 # COMMAND ----------
 
+dbutils.widgets.text("p_file_date", "2021-03-21")
+v_file_date = dbutils.widgets.get("p_file_date")
+
+# COMMAND ----------
+
 # MAGIC %run "../includes/common_functions"
 
 # COMMAND ----------
@@ -42,7 +47,7 @@ races_schema = StructType(fields=[
 races_df = spark.read \
 .option("header", True) \
 .schema(races_schema) \
-.csv(f'{raw_folder_path}/races.csv')
+.csv(f'{raw_folder_path}/{v_file_date}/races.csv')
 
 # COMMAND ----------
 
@@ -56,7 +61,8 @@ from pyspark.sql.functions import col, current_timestamp, to_timestamp, concat, 
 # COMMAND ----------
 
 spark.sql("set spark.sql.legacy.timeParserPolicy=LEGACY")
-races_with_timestamp_df = races_df.withColumn("race_timestamp", to_timestamp(concat(col('date'), lit(' '), col('time')), 'yyyy-MM-dd HH:mm:ss')).withColumn("data_source", lit(v_data_source))
+races_with_timestamp_df = races_df.withColumn("race_timestamp", to_timestamp(concat(col('date'), lit(' '), col('time')), 'yyyy-MM-dd HH:mm:ss')).withColumn("data_source", lit(v_data_source)) \
+.withColumn("file_date", lit(v_file_date))
 
 # COMMAND ----------
 
