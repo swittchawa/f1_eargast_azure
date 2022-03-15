@@ -91,4 +91,4 @@ drivers_final_df.write.mode('overwrite').format("parquet").saveAsTable("f1_proce
 
 # COMMAND ----------
 
-
+dbutils.notebook.exit("Success")

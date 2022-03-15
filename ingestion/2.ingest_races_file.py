@@ -85,3 +85,7 @@ races_selected_df = races_with_ingestion_date_df.select(col("raceId").alias('rac
 # COMMAND ----------
 
 races_selected_df.write.mode('overwrite').partitionBy('race_year').format('parquet').saveAsTable("f1_processed.races")
+
+# COMMAND ----------
+
+dbutils.notebook.exit("Success")

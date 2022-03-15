@@ -97,13 +97,26 @@ results_final_df = results_add_date.drop('statusId')
 
 # COMMAND ----------
 
-for race_id_list in results_final_df.select("race_id").distinct().collect():
-    if (spark._jsparkSession.catalog().tableExists("f1_processed.results")):
-        spark.sql(f"ALTER TABLE f1_processed.results DROP IF EXISTS PARTITION (race_id = {race_id_list.race_id})")
+# for race_id_list in results_final_df.select("race_id").distinct().collect():
+#     if (spark._jsparkSession.catalog().tableExists("f1_processed.results")):
+#         spark.sql(f"ALTER TABLE f1_processed.results DROP IF EXISTS PARTITION (race_id = {race_id_list.race_id})")
 
 # COMMAND ----------
 
-results_final_df.write.mode('append').partitionBy('race_id').format("parquet").saveAsTable("f1_processed.results")
+# results_final_df.write.mode('append').partitionBy('race_id').format("parquet").saveAsTable("f1_processed.results")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC -- DROP TABLE f1_processed.results
+
+# COMMAND ----------
+
+overwrite_partition(results_final_df, 'f1_processed', 'results', 'race_id')
+
+# COMMAND ----------
+
+dbutils.notebook.exit("Success")
 
 # COMMAND ----------
 
@@ -112,7 +125,3 @@ results_final_df.write.mode('append').partitionBy('race_id').format("parquet").s
 # MAGIC FROM f1_processed.results
 # MAGIC GROUP BY race_id
 # MAGIC ORDER BY race_id DESC;
-
-# COMMAND ----------
-
-

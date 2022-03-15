@@ -73,3 +73,7 @@ constructor_final_df = add_ingestion_date(constructor_renamed_df)
 # COMMAND ----------
 
 constructor_final_df.write.mode('overwrite').format("parquet").saveAsTable("f1_processed.constructors")
+
+# COMMAND ----------
+
+dbutils.notebook.exit("Success")
