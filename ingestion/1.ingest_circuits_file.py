@@ -98,11 +98,7 @@ circuits_final_df = add_ingestion_date(circuits_renamed_df)
 
 # COMMAND ----------
 
-circuits_final_df.write.mode('overwrite').format("parquet").saveAsTable("f1_processed.circuits")
-
-# COMMAND ----------
-
-display(circuits_final_df)
+circuits_final_df.write.mode('overwrite').format("delta").saveAsTable("f1_processed.circuits")
 
 # COMMAND ----------
 

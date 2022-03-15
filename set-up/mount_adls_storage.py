@@ -47,4 +47,12 @@ dbutils.fs.ls("/mnt/formula1dl1304/presentation")
 
 # COMMAND ----------
 
+mount_adls("demo")
+
+# COMMAND ----------
+
+dbutils.fs.ls("/mnt/formula1dl1304/demo")
+
+# COMMAND ----------
+
 

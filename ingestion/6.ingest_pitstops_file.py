@@ -71,8 +71,18 @@ final_df = add_ingestion_date(renamed_df)
 
 # COMMAND ----------
 
-overwrite_partition(final_df, 'f1_processed', 'pit_stops', 'race_id')
+merge_condition = "tgt.race_id = src.race_id AND tgt.driver_id = src.driver_id AND tgt.stop = src.stop"
+merge_delta_data(final_df, 'f1_processed', 'pit_stops', processed_folder_path, merge_condition, 'race_id')
 
 # COMMAND ----------
 
 dbutils.notebook.exit("Success")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC SELECT * FROM f1_processed.pit_stops
+
+# COMMAND ----------
+
+

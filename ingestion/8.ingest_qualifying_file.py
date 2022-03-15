@@ -58,20 +58,21 @@ qualifying_df = spark.read \
 
 # COMMAND ----------
 
+qualifying_with_ingestion_date_df = add_ingestion_date(qualifying_df)
+
+# COMMAND ----------
+
 from pyspark.sql.functions import current_timestamp, lit
 
 # COMMAND ----------
 
-renamed_df = qualifying_df.withColumnRenamed("qualifyingId", "qualifying_id") \
-.withColumnRenamed("raceId", "race_id") \
+final_df = qualifying_with_ingestion_date_df.withColumnRenamed("qualifyId", "qualify_id") \
 .withColumnRenamed("driverId", "driver_id") \
+.withColumnRenamed("raceId", "race_id") \
 .withColumnRenamed("constructorId", "constructor_id") \
+.withColumn("ingestion_date", current_timestamp()) \
 .withColumn("data_source", lit(v_data_source)) \
 .withColumn("file_date", lit(v_file_date))
-
-# COMMAND ----------
-
-final_df = add_ingestion_date(renamed_df)
 
 # COMMAND ----------
 
@@ -80,8 +81,13 @@ final_df = add_ingestion_date(renamed_df)
 
 # COMMAND ----------
 
-overwrite_partition(final_df, 'f1_processed', 'qualifying', 'race_id')
+merge_condition = "tgt.qualify_id = src.qualify_id AND tgt.race_id = src.race_id"
+merge_delta_data(final_df, 'f1_processed', 'qualifying', processed_folder_path, merge_condition, 'race_id')
 
 # COMMAND ----------
 
 dbutils.notebook.exit("Success")
+
+# COMMAND ----------
+
+
